@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/io-1.png" type="image/x-icon" />
+    <title>JavaScript todo list</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body id="jha">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html"
+          ><img
+            src="/io-1.png"
+            alt="logo"
+            width="30"
+            height="24"
+            class="align-item-center mx-2"
+          />yxv todos</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://newsapp-api.vercel.app/"
+                >Features</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://angularwebapp.vercel.app/"
+                >Angular version</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="text-center my-3">
+      <h3>Yoyr Todo list</h3>
+    </div>
+    <div class="container my-4">
+      <div class="mb-3">
+        <label for="tittle" class="form-label">Todo title</label>
+        <input
+          type="text"
+          class="form-control"
+          id="title"
+          aria-describedby="emailHelp"
+        />
+      </div>
+      <div class="form-floating mb-3">
+        <textarea
+          class="form-control"
+          placeholder="Leave a comment here"
+          id="desc"
+          style="height: 100px"
+        ></textarea>
+        <label for="desc">Description</label>
+      </div>
+      <button type="submit" id="add" class="btn btn-primary">Add Todo</button>
+      <button type="submit" id="addss" class="btn btn-dark" onclick="clearr()">
+        Clear all list
+      </button>
+    </div>
+    <div id="items" class="container">
+      <h2>Your items</h2>
+      <table class="table table-borderless table-hover">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr>
+            <td>1</td>
+            <td>dfsfds</td>
+            <td>jhghj</td>
+            <td><button class="btn btn-primary btn-sm">delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center text-bg-light p-2" id="nod"></div>
+    </div>
+    <div>
+      <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div
+          id="liveToast"
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
+            <img
+              src="/io-1.png"
+              class="rounded me-2"
+              alt="logo"
+              width="30"
+              height="24"
+            />
+            <strong class="me-auto">yxv Todo</strong>
+            <small>Infinity mins ago</small>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">No todos to display</div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function getupdate() {
+        console.log("its clicked");
+        tit = document.getElementById("title").value;
+        ded = document.getElementById("desc").value;
+        if (localStorage.getItem("itemsJson") == null) {
+          itemJsonArray = [];
+          itemJsonArray.push([tit, ded]);
+          localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
+        } else {
+          itemJsonArraystr = localStorage.getItem("itemsJson");
+          itemJsonArray = JSON.parse(itemJsonArraystr);
+          itemJsonArray.push([tit, ded]);
+          localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
+        }
+        update();
+      }
+
+      function update() {
+        if (localStorage.getItem("itemsJson") == null) {
+          itemJsonArray = [];
+          localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
+        } else {
+          itemJsonArraystr = localStorage.getItem("itemsJson");
+          itemJsonArray = JSON.parse(itemJsonArraystr);
+        }
+        let tablebd = document.getElementById("tbody");
+        let str = "";
+        itemJsonArray.forEach((element, index) => {
+          str += `
+            <tr>
+            <td>${index + 1}</td>
+            <td>${element[0]}</td>
+            <td>${element[1]}</td>
+            <td><button class="btn btn-primary btn-sm" onClick="deletem(${index})">delete</button></td>
+          </tr>
+            `;
+        });
+        tablebd.innerHTML = str;
+      }
+
+      document.getElementById("add").addEventListener("click", getupdate);
+      update();
+      function deletem(itemIndex) {
+        console.log("you delete index item", itemIndex);
+        itemJsonArraystr = localStorage.getItem("itemsJson");
+        itemJsonArray = JSON.parse(itemJsonArraystr);
+        itemJsonArray.splice(itemIndex, 1);
+        localStorage.setItem("itemsJson", JSON.stringify(itemJsonArray));
+        update();
+      }
+      function clearr() {
+        console.log("deleting all list..");
+        localStorage.clear();
+        update();
+        document.getElementById(
+          "nod"
+        ).innerHTML = `<span>no todo to display</span>`;
+      }
+
+      const toastTrigger = document.getElementById("addss");
+      const toastLiveExample = document.getElementById("liveToast");
+      if (toastTrigger) {
+        toastTrigger.addEventListener("click", () => {
+          const toast = new bootstrap.Toast(toastLiveExample);
+          toast.show();
+        });
+      }
+    </script>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+    crossorigin="anonymous"
+  ></script>
+</html>
